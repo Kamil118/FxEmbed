@@ -143,9 +143,9 @@ const galleryItem = (url: string, description?: string | null): MediaGalleryItem
   ...(description ? { description: truncateWithEllipsis(description, MAX_DESCRIPTION_LENGTH) } : {})
 });
 
-const gallery = (items: MediaGalleryItem[]): MediaGalleryComponent | null =>
+const gallery = (items: MediaGalleryItem[], page: number = 1): MediaGalleryComponent | null =>
   items.length > 0
-    ? { type: ComponentType.MediaGallery, items: items.slice(0, MAX_GALLERY_ITEMS) }
+    ? { type: ComponentType.MediaGallery, items: items.slice(page-1 * MAX_GALLERY_ITEMS, (page) * MAX_GALLERY_ITEMS) }
     : null;
 
 /** Same media URL handling as the activity embed (GIF transcodes, video redirect workaround) */
@@ -384,6 +384,7 @@ interface ComponentEmbedOptions {
   publicUrl: string;
   flags: InputFlags;
   mediaNumber?: number;
+  galleryPage?: number;
 }
 
 /**
@@ -397,7 +398,8 @@ export const buildComponentEmbed = ({
   status,
   publicUrl,
   flags,
-  mediaNumber
+  mediaNumber,
+  galleryPage
 }: ComponentEmbedOptions): ComponentEmbedPayload => {
   const branding = getBranding(context);
   const twitterStatus = status as APITwitterStatus;
@@ -444,11 +446,12 @@ export const buildComponentEmbed = ({
         collectedMedia
           .filter(media => media.media_id !== article.cover_media?.media_id)
           .map(articleMediaItem)
-          .filter((item): item is MediaGalleryItem => item !== null)
+          .filter((item): item is MediaGalleryItem => item !== null),
+        galleryPage ?? 1 
       );
     }
   } else if (includeMedia) {
-    mediaGallery = gallery(statusMediaItems(context, status, flags, mediaNumber));
+    mediaGallery = gallery(statusMediaItems(context, status, flags, mediaNumber), galleryPage ?? 1 );
   }
 
   const postHasMedia = !!(articleCover || mediaGallery);
@@ -492,7 +495,7 @@ export const buildComponentEmbed = ({
     components.push(textDisplay(quote));
     /* Like the regular embed, a quote's media is shown when the post itself has none */
     if (includeMedia && !mediaGallery && !isTombstone(status.quote)) {
-      const quoteGallery = gallery(statusMediaItems(context, status.quote, flags, mediaNumber));
+      const quoteGallery = gallery(statusMediaItems(context, status.quote, flags, mediaNumber), galleryPage ?? 1 );
       if (quoteGallery) {
         components.push(quoteGallery);
       }

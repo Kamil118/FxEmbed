@@ -121,6 +121,7 @@ export const handleStatus = async (
   statusId: string,
   authorHandle: string | null,
   mediaNumber: number | undefined,
+  galleryPage: number | undefined,
   userAgent: string,
   flags: InputFlags,
   language: string | undefined,
@@ -463,7 +464,8 @@ export const handleStatus = async (
           status: status as APIStatus,
           publicUrl: publicStatusUrls[status.provider] ?? status.url,
           flags,
-          mediaNumber
+          mediaNumber,
+          galleryPage
         })
       );
       /* The component embed takes the place of the activity embed */

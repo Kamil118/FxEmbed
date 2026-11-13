@@ -85,6 +85,7 @@ export const tiktokVideoRequest = async (c: Context) => {
       id,
       null,
       undefined, //mediaNumber ? parseInt(mediaNumber) : undefined,
+      undefined, //galleryPage ? parseInt(galleryPage) : undefined,
       userAgent,
       flags,
       undefined,

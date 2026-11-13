@@ -6,10 +6,16 @@ services:
     image: fxembed:slim
     container_name: fxembed
     restart: unless-stopped
-    ports:
-      - "8787:8787"
+    networks:
+      - reverse_proxy_default
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       WRANGLER_SEND_METRICS: "false"
       CREDENTIAL_KEY: ${CREDENTIAL_KEY:-}
       EXCEPTION_DISCORD_WEBHOOK: ${EXCEPTION_DISCORD_WEBHOOK:-}
+      CLOUDFLARE_API_TOKEN: ${CF_API_TOKEN}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME} 
+
+networks:
+  reverse_proxy_default:
+    external: true

@@ -77,6 +77,7 @@ export const instagramPostRequest = async (c: Context) => {
       shortcode,
       null,
       undefined,
+      undefined, //galleryPage ? parseInt(galleryPage) : undefined,
       userAgent,
       flags,
       undefined,

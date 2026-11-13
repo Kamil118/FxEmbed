@@ -9,7 +9,7 @@ import { isTwitterNumericStatusId } from '../../../helpers/utils';
 
 /* Handler for status request */
 export const statusRequest = async (c: Context) => {
-  const { handle, id, mediaNumber, language } = c.req.param();
+  const { handle, id, mediaNumber, language, galleryPage } = c.req.param();
   const numericStatusId = id?.match(/\d{2,20}/)?.[0];
   const url = new URL(c.req.url);
   const flags: InputFlags = {};
@@ -131,10 +131,11 @@ export const statusRequest = async (c: Context) => {
       numericStatusId,
       null,
       mediaNumber ? parseInt(mediaNumber) : undefined,
+      galleryPage ? parseInt(galleryPage) : undefined,
       userAgent,
       flags,
       language,
-      DataProvider.Twitter
+      DataProvider.Twitter,
     );
     /* Do not cache if using a custom redirect or Horizon test URLs */
     const cacheControl =

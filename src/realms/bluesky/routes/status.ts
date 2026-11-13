@@ -74,6 +74,7 @@ export const blueskyStatusRequest = async (c: Context) => {
       actualId,
       handle,
       mediaNumber ? parseInt(mediaNumber, 10) : undefined,
+      undefined, //galleryPage ? parseInt(galleryPage) : undefined,
       userAgent,
       flags,
       language,
